@@ -1,0 +1,15 @@
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    restart: always
+    container_name: imdbclone
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=imdbclone
+    ports:
+      - "5430:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+volumes:
+  postgres_data:

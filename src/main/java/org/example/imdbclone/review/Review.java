@@ -1,10 +1,16 @@
-package org.example.imdbclone.entity;
+package org.example.imdbclone.review;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
 @Table(name = "reviews")
 public class Review {
     @Id
@@ -27,62 +33,11 @@ public class Review {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Review() {
-    }
-
     public Review(Integer userId, Integer titleId, Integer rating, String reviewText, LocalDateTime createdAt) {
         this.userId = userId;
         this.titleId = titleId;
         this.rating = rating;
         this.reviewText = reviewText;
-        this.createdAt = createdAt;
-    }
-
-    public Integer getReviewId() {
-        return reviewId;
-    }
-
-    public void setReviewId(Integer reviewId) {
-        this.reviewId = reviewId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getTitleId() {
-        return titleId;
-    }
-
-    public void setTitleId(Integer titleId) {
-        this.titleId = titleId;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public String getReviewText() {
-        return reviewText;
-    }
-
-    public void setReviewText(String reviewText) {
-        this.reviewText = reviewText;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

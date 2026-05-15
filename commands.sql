@@ -86,6 +86,7 @@ create table reviews
     constraint fk_title_id foreign key (title_id) references title (title_id) on delete cascade,
     constraint unique_user_review_per_movie unique (user_id, title_id)
 );
+
 create table watchlist
 (
     user_id  int not null,
@@ -115,7 +116,7 @@ create table title_aka
     title_id      int          not null,
     title_variant varchar(500) not null,
     region        varchar(10),
-    language      varchar(10),
+    language      varchar(20),
     constraint fk_title foreign key (title_id) references title (title_id) on delete cascade
 );
 create table title_media

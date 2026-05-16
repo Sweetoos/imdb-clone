@@ -6,17 +6,15 @@ import org.example.imdbclone.model.Title;
 import org.example.imdbclone.repository.TitleRepository;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class TitleService {
-    private final EntityManager entityManager;
-    private final TitleRepository titleRepository;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-    public Title createTitle(Title title){
-        return titleRepository.save(title);
-    }
-
-    public void addPersonForTitle(Title title){
-        titleRepository.save(title);
-    }
+public interface TitleService {
+    Title createTitle(Title title);
+    List<Title> getAllTitles();
+    Optional<Title> getTitleById(Long id);
+    Title updateTitle(Long id, Title titleDetails);
+    Title patchtitle(Long id, Map<String, Object> updates);
+    void deleteTitle(Long id);
 }

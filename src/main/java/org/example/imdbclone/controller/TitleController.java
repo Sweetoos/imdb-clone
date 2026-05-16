@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/titles")
+@RequestMapping("/api/titles")
 @RequiredArgsConstructor
 public class TitleController {
     private final TitleService titleService;

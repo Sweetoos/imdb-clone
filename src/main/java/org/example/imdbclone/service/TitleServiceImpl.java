@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.example.imdbclone.exception.ResourceNotFoundException;
 import org.example.imdbclone.model.Title;
+import org.example.imdbclone.model.TitleType;
 import org.example.imdbclone.repository.TitleRepository;
 import org.springframework.stereotype.Service;
 
@@ -52,8 +53,28 @@ public class TitleServiceImpl implements TitleService {
         Title title=titleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
-        if(updates.containsKey("name")){
-            title.setTitleName((String) updates.get("name"));
+        if(updates.containsKey("title_name")){
+            title.setTitleName((String) updates.get("title_name"));
+        }
+
+        if(updates.containsKey("start_year")){
+            title.setStartYear((Integer) updates.get("start_year"));
+        }
+
+        if(updates.containsKey("end_year")){
+            title.setEndYear((Integer) updates.get("end_year"));
+        }
+
+        if(updates.containsKey("explicit_content")){
+            title.setExplicitContent((Boolean) updates.get("explicit_content"));
+        }
+
+        if(updates.containsKey("runtime_minutes")){
+            title.setRuntimeMinutes((Integer) updates.get("runtime_minutes"));
+        }
+
+        if(updates.containsKey("title_type")){
+            title.setTitleType((TitleType) updates.get("title_type"));
         }
 
         return titleRepository.save(title);

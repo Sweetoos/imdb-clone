@@ -1,9 +1,10 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.title.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.imdbclone.model.Genre;
+import org.example.imdbclone.model.Keyword;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

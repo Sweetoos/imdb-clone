@@ -2,6 +2,7 @@ package org.example.imdbclone.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.imdbclone.title.domain.Title;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;

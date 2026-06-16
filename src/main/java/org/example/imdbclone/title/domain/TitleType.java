@@ -1,4 +1,4 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.title.domain;
 
 public enum TitleType {
     EPISODE,

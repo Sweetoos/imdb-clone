@@ -16,10 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -46,7 +48,7 @@ public class TitleServiceTest {
     }
 
     @Nested
-    @DisplayName("SERVICE: CREATE")
+    @DisplayName("[TITLE] SERVICE: CREATE")
     class CreateTitleTests {
         @Test
         @DisplayName("Should create title successfully when data is valid")
@@ -73,7 +75,7 @@ public class TitleServiceTest {
     }
 
     @Nested
-    @DisplayName("SERVICE: READ")
+    @DisplayName("[TITLE] SERVICE: READ")
     class ReadTitleTests {
 
         @Test
@@ -87,6 +89,41 @@ public class TitleServiceTest {
             assertThat(result).isNotNull();
             assertThat(result.titleId()).isEqualTo(existingId);
             assertThat(result.titleName()).isEqualTo("50 pozycji Lococka");
+        }
+
+        @Test
+        @DisplayName("Should return list of all titles")
+        void shouldReturnAllTitles() {
+            Title movie = new Title();
+            movie.setTitleId(88888888888L);
+            movie.setTitleName("Interstellar");
+            movie.setExplicitContent(false);
+            movie.setRuntimeMinutes(169);
+            movie.setStartYear(2014);
+            movie.setEndYear(2014);
+            movie.setTitleType(TitleType.MOVIE);
+            Title series = new Title();
+            series.setTitleId(99999999999L);
+            series.setTitleName("Game of Thrones");
+            series.setExplicitContent(true);
+            series.setStartYear(2011);
+            series.setEndYear(2019);
+            series.setTitleType(TitleType.TVSERIES);
+
+            List<Title> titles = new ArrayList<>();
+            titles.add(movie);
+            titles.add(series);
+
+            when(titleRepository.findAll()).thenReturn(titles);
+
+            List<TitleResponseDto> result = titleService.getAllTitles();
+
+            assertThat(result).isNotNull().hasSize(2);
+            assertThat(result.get(0).titleId()).isEqualTo(88888888888L);
+            assertThat(result.get(1).titleId()).isEqualTo(99999999999L);
+            assertThat(result.get(0).titleName()).isEqualTo("Interstellar");
+            assertThat(result.get(1).titleName()).isEqualTo("Game of Thrones");
+            verify(titleRepository, times(1)).findAll();
         }
 
         @Test
@@ -104,7 +141,7 @@ public class TitleServiceTest {
     }
 
     @Nested
-    @DisplayName("SERVICE: UPDATE(PUT)")
+    @DisplayName("[TITLE] SERVICE: UPDATE(PUT)")
     class UpdateTitleTests {
         @Test
         @DisplayName("Should update title successfully when data is valid")
@@ -151,7 +188,7 @@ public class TitleServiceTest {
     }
 
     @Nested
-    @DisplayName("SERVICE: PATCH")
+    @DisplayName("[TITLE] SERVICE: PATCH")
     class PatchTitleTests {
         @Test
         @DisplayName("Should update only provided fields and ignore others")
@@ -178,7 +215,7 @@ public class TitleServiceTest {
     }
 
     @Nested
-    @DisplayName("SERVICE: DELETE")
+    @DisplayName("[TITLE] SERVICE: DELETE")
     class DeleteTitleTests {
         @Test
         @DisplayName("Should delete title successfully")

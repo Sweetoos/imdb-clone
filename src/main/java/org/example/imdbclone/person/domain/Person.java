@@ -1,7 +1,6 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.person.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,8 +15,8 @@ import java.time.LocalDate;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "name_id")
-    private Long nameId;
+    @Column(name = "person_id")
+    private Long personId;
 
     @Column(name = "first_name", length = 100, nullable = false)
     private String firstName;
@@ -30,4 +29,8 @@ public class Person {
 
     @Column(name = "death_date")
     private LocalDate deathDate;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

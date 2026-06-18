@@ -58,4 +58,6 @@ public class Title {
     )
     @Builder.Default
     private List<Keyword> keywords=new ArrayList<>();
+
+    //title has persons such as actors, directors etc
 }

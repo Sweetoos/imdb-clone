@@ -191,7 +191,7 @@ public class TitleServiceTest {
     @DisplayName("[TITLE] SERVICE: PATCH")
     class PatchTitleTests {
         @Test
-        @DisplayName("Should update only provided fields and ignore others")
+        @DisplayName("Should patch only provided fields and ignore others")
         void shouldPatchTitleSuccessfully() {
             Long existingId = 99999999L;
             TitlePatchDto patchDto = new TitlePatchDto(

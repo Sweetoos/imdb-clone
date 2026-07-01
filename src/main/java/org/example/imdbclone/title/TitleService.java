@@ -83,7 +83,7 @@ public class TitleService {
         Title title = titleRepository.findById(id)
                 .orElseThrow(() -> new TitleNotFoundException(id));
 
-        if (!Objects.equals(dto.titleName(), "title_name")) {
+        if (dto.titleName() != null) {
             title.setTitleName(dto.titleName());
         }
         if (dto.explicitContent() != null) {
@@ -105,6 +105,7 @@ public class TitleService {
         return mapToResponseDto(title);
     }
 
+    @Transactional
     public void deleteTitle(Long id) {
         boolean exists = titleRepository.existsById(id);
         if (!exists) {

@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.imdbclone.moviecast.domain.MovieCast;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "person")
@@ -33,4 +35,8 @@ public class Person {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "person")
+    private List<MovieCast> roles;
+
 }

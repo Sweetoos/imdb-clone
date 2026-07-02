@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.imdbclone.model.Genre;
 import org.example.imdbclone.model.Keyword;
+import org.example.imdbclone.moviecast.domain.MovieCast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,9 @@ public class Title {
     )
     @Builder.Default
     private List<Keyword> keywords=new ArrayList<>();
+
+    @OneToMany(mappedBy = "title")
+    private List<MovieCast> cast;
 
     //title has persons such as actors, directors etc
 }

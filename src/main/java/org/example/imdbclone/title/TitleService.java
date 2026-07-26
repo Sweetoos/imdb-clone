@@ -30,13 +30,14 @@ public class TitleService {
             throw new RuntimeException("Title can't be created in the future");
         }
 
-        Title titleToSave = new Title();
-        titleToSave.setTitleName(dto.titleName());
-        titleToSave.setExplicitContent(dto.explicitContent());
-        titleToSave.setRuntimeMinutes(dto.runtimeMinutes());
-        titleToSave.setStartYear(dto.startYear());
-        titleToSave.setEndYear(dto.endYear());
-        titleToSave.setTitleType(dto.titleType());
+        Title titleToSave = Title.builder()
+                .titleName(dto.titleName())
+                .explicitContent(dto.explicitContent())
+                .runtimeMinutes(dto.runtimeMinutes())
+                .startYear(dto.startYear())
+                .endYear(dto.endYear())
+                .titleType(dto.titleType())
+                .build();
 
         Title savedTitle = titleRepository.save(titleToSave);
         return mapToResponseDto(savedTitle);

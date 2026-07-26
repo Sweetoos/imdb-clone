@@ -1,6 +1,5 @@
 package org.example.imdbclone.person;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.imdbclone.person.domain.Person;
 import org.example.imdbclone.person.dto.PersonCreateDto;
@@ -9,9 +8,9 @@ import org.example.imdbclone.person.dto.PersonResponseDto;
 import org.example.imdbclone.person.dto.PersonUpdateDto;
 import org.example.imdbclone.person.exception.PersonNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

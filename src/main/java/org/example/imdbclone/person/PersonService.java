@@ -28,12 +28,13 @@ public class PersonService {
             throw new RuntimeException("Death date cannot be before birth date");
         }
 
-        Person personToSave = new Person();
-        personToSave.setFirstName(dto.firstName());
-        personToSave.setLastName(dto.lastName());
-        personToSave.setBirthDate(dto.birthDate());
-        personToSave.setDeathDate(dto.deathDate());
-        personToSave.setRole(dto.role());
+        Person personToSave = Person.builder()
+                .firstName(dto.firstName())
+                .lastName(dto.lastName())
+                .birthDate(dto.birthDate())
+                .deathDate(dto.deathDate())
+                .role(dto.role())
+                .build();
 
         Person savedPerson = personRepository.save(personToSave);
         return mapToResponseDto(savedPerson);
@@ -50,11 +51,13 @@ public class PersonService {
         );
     }
 
+    @Transactional(readOnly = true)
     public PersonResponseDto getPersonById(Long id) {
         Person person = personRepository.findById(id).orElseThrow(() -> new PersonNotFoundException(id));
         return mapToResponseDto(person);
     }
 
+    @Transactional(readOnly = true)
     public List<PersonResponseDto> getAllPersons() {
         List<Person> persons = personRepository.findAll();
         return persons.stream().map(this::mapToResponseDto).toList();

@@ -1,9 +1,7 @@
 package org.example.imdbclone.person.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.imdbclone.moviecast.domain.MovieCast;
 
 import java.time.LocalDate;
@@ -13,7 +11,9 @@ import java.util.List;
 @Table(name = "person")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

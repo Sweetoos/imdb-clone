@@ -27,7 +27,7 @@ A modern, robust, and scalable full-stack clone of IMDb (Internet Movie Database
 
 ### Backend
 * **Language:** Java 17 / 21
-* **Framework:** Spring Boot 3 (Spring Web, Spring Data JPA, Spring Validation)
+* **Framework:** Spring Boot 4 (Spring Web, Spring Data JPA, Spring Validation)
 * **Database:** PostgreSQL
 * **Database Migrations:** Flyway
 * **Utilities:** Project Lombok (Builder pattern, immutability)

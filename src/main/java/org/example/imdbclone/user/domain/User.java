@@ -1,4 +1,4 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id

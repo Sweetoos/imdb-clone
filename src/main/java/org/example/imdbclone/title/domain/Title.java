@@ -62,6 +62,4 @@ public class Title {
 
     @OneToMany(mappedBy = "title")
     private List<MovieCast> cast;
-
-    //title has persons such as actors, directors etc
 }

@@ -1,8 +1,9 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.review.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.imdbclone.title.domain.Title;
+import org.example.imdbclone.user.domain.User;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -18,6 +19,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Review {
 
     @Id
@@ -25,7 +28,7 @@ public class Review {
     @Column(name = "review_id")
     private Long reviewId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_id"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;

@@ -1,9 +1,9 @@
-package org.example.imdbclone.dto;
+package org.example.imdbclone.user.dto;
 
 import java.time.LocalDateTime;
 
-public record UserDTO(
-        Integer userId,
+public record UserResponseDTO(
+        Long userId,
         String username,
         String email,
         LocalDateTime createdAt

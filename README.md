@@ -152,7 +152,7 @@ The application will automatically apply Flyway migrations and start on `http://
 This project is built iteratively following a **Modular Monolith to Polyglot Microservices** strategy:
 
 - [x] **Phase 1: Core Domain & REST API (Spring Boot + Postgres)**
-- [x] **Phase 2: Database Migrations & Automated Seeding (Flyway + TMDB API)**
+- [ ] **Phase 2: Database Migrations & Automated Seeding (Flyway + TMDB API)**
 - [ ] **Phase 3: Security Layer (Spring Security + JWT Authentication)**
 - [ ] **Phase 4: SPA Client (Angular 17+ with Signals & SSR)**
 - [ ] **Phase 5: Polyglot Microservices Architecture**:

@@ -12,9 +12,15 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reviews", uniqueConstraints = {
-        @UniqueConstraint(name = "unique_user_review_per_movie", columnNames = {"user_id", "title_id"})
-})
+@Table(
+        name = "reviews",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_user_review_per_movie",
+                        columnNames = {"user_id", "title_id"}
+                )
+        }
+)
 @Check(constraints = "rating >= 1 AND rating <= 10")
 @Getter
 @Setter
@@ -29,12 +35,20 @@ public class Review {
     private Long reviewId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_id"))
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_user_id")
+    )
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "title_id", nullable = false, foreignKey = @ForeignKey(name = "fk_title_id"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "title_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_title_id")
+    )
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Title title;
 

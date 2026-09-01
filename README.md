@@ -56,7 +56,7 @@ The database design closely replicates the official IMDb data model:
 * **`Person`**: Represents industry professionals (`first_name`, `last_name`, `birth_date`, `death_date`).
 * **`MovieCast`**: Rich join entity linking titles and persons with a specific `JobRole` and `character_name`.
 * **`Genre` & `Keyword`**: Categorization metadata for titles.
-* **`User` & `Review`**: Social layer for user ratings (1-10 scale) and textual reviews.
+* **`User` & `ReviewRepository`**: Social layer for user ratings (1-10 scale) and textual reviews.
 
 ---
 

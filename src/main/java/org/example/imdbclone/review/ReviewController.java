@@ -3,6 +3,7 @@ package org.example.imdbclone.review;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.imdbclone.review.dto.ReviewCreateDto;
+import org.example.imdbclone.review.dto.ReviewPatchDto;
 import org.example.imdbclone.review.dto.ReviewResponseDto;
 import org.example.imdbclone.review.dto.ReviewUpdateDto;
 import org.springframework.http.HttpStatus;
@@ -18,28 +19,33 @@ public class ReviewController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ReviewResponseDto createReview(@RequestBody @Valid ReviewCreateDto dto){
+    public ReviewResponseDto createReview(@RequestBody @Valid ReviewCreateDto dto) {
         return reviewService.createReview(dto);
     }
 
     @GetMapping("/title/{titleId}")
-    public List<ReviewResponseDto> getReviewsForTitle(@PathVariable Long titleId){
+    public List<ReviewResponseDto> getReviewsForTitle(@PathVariable Long titleId) {
         return reviewService.getReviewsForTitle(titleId);
     }
 
     @GetMapping("/user/{userId}")
-    public List<ReviewResponseDto> getReviewsForUser(@PathVariable Long userId){
+    public List<ReviewResponseDto> getReviewsForUser(@PathVariable Long userId) {
         return reviewService.getReviewsForUser(userId);
     }
 
     @PutMapping("/{id}")
-    public ReviewResponseDto updateReview(@PathVariable Long id, @RequestBody @Valid ReviewUpdateDto dto){
+    public ReviewResponseDto updateReview(@PathVariable Long id, @RequestBody @Valid ReviewUpdateDto dto) {
         return reviewService.updateReview(id, dto);
+    }
+
+    @PatchMapping("/{id}")
+    public ReviewResponseDto patchReview(@PathVariable Long id, @RequestBody @Valid ReviewPatchDto dto) {
+        return reviewService.patchReview(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteReview(@PathVariable Long id){
+    public void deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
     }
 }

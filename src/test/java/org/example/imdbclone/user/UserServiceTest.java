@@ -246,7 +246,7 @@ public class UserServiceTest {
             UserResponseDto result = userService.patchUser(existingId, patchDto);
 
             assertThat(result).isNotNull();
-            assertThat(result.username()).isEqualTo("jane_doe"); // Stary username pozostał bez zmian!
+            assertThat(result.username()).isEqualTo("jane_doe");
             assertThat(result.email()).isEqualTo("new_email@kds.pl");
             verify(userRepository, never()).existsByUsername(any());
         }

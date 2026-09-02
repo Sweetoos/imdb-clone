@@ -5,6 +5,7 @@ import org.example.imdbclone.rating.TitleRatingRepository;
 import org.example.imdbclone.rating.domain.TitleRating;
 import org.example.imdbclone.review.domain.Review;
 import org.example.imdbclone.review.dto.ReviewCreateDto;
+import org.example.imdbclone.review.dto.ReviewPatchDto;
 import org.example.imdbclone.review.dto.ReviewResponseDto;
 import org.example.imdbclone.review.dto.ReviewUpdateDto;
 import org.example.imdbclone.review.exception.DuplicateReviewException;
@@ -86,6 +87,28 @@ public class ReviewService {
         review.setReviewText(dto.reviewText());
 
         updateTitleRatingStats(review.getTitle());
+
+        return mapToResponseDto(review);
+    }
+
+    @Transactional
+    public ReviewResponseDto patchReview(Long id, ReviewPatchDto dto) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ReviewNotFoundException(id));
+
+        boolean ratingChanged = false;
+
+        if (dto.rating() != null) {
+            review.setRating(dto.rating());
+            ratingChanged = true;
+        }
+        if (dto.reviewText() != null) {
+            review.setReviewText(dto.reviewText());
+        }
+
+        if (ratingChanged) {
+            updateTitleRatingStats(review.getTitle());
+        }
 
         return mapToResponseDto(review);
     }

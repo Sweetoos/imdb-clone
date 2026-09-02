@@ -4,6 +4,7 @@ import org.example.imdbclone.rating.TitleRatingRepository;
 import org.example.imdbclone.rating.domain.TitleRating;
 import org.example.imdbclone.review.domain.Review;
 import org.example.imdbclone.review.dto.ReviewCreateDto;
+import org.example.imdbclone.review.dto.ReviewPatchDto;
 import org.example.imdbclone.review.dto.ReviewResponseDto;
 import org.example.imdbclone.review.dto.ReviewUpdateDto;
 import org.example.imdbclone.review.exception.DuplicateReviewException;
@@ -155,6 +156,61 @@ public class ReviewServiceTest {
             assertThat(result.rating()).isEqualTo(10);
             assertThat(result.reviewText()).isEqualTo("Masterpiece!");
             verify(titleRatingRepository, times(1)).save(any(TitleRating.class));
+        }
+    }
+
+    @Nested
+    @DisplayName("[REVIEW] SERVICE: PATCH")
+    class PatchReviewTests {
+
+        @Test
+        @DisplayName("Should patch only review text without recalculating title rating")
+        void shouldPatchOnlyReviewText() {
+            Long reviewId = 100L;
+            ReviewPatchDto patchDto = new ReviewPatchDto(null, "Updated text only!");
+
+            when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(sampleReview));
+
+            ReviewResponseDto result = reviewService.patchReview(reviewId, patchDto);
+
+            assertThat(result).isNotNull();
+            assertThat(result.reviewText()).isEqualTo("Updated text only!");
+            assertThat(result.rating()).isEqualTo(9);
+
+            verify(titleRatingRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("Should patch rating and recalculate title rating stats")
+        void shouldPatchRatingAndRecalculateStats() {
+            Long reviewId = 100L;
+            ReviewPatchDto patchDto = new ReviewPatchDto(10, null);
+
+            when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(sampleReview));
+            when(reviewRepository.calculateAverageRatingByTitleId(sampleTitle.getTitleId())).thenReturn(10.0);
+            when(reviewRepository.countReviewsByTitleId(sampleTitle.getTitleId())).thenReturn(1);
+            when(titleRatingRepository.findById(sampleTitle.getTitleId())).thenReturn(Optional.empty());
+
+            ReviewResponseDto result = reviewService.patchReview(reviewId, patchDto);
+
+            assertThat(result).isNotNull();
+            assertThat(result.rating()).isEqualTo(10);
+            assertThat(result.reviewText()).isEqualTo("Amazing movie!");
+
+            verify(titleRatingRepository, times(1)).save(any(TitleRating.class));
+        }
+
+        @Test
+        @DisplayName("Should throw ReviewNotFoundException when patching non-existing review")
+        void shouldThrowExceptionWhenReviewNotFound() {
+            Long nonExistingId = 11111111L;
+            ReviewPatchDto patchDto = new ReviewPatchDto(8, "Text");
+
+            when(reviewRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+            assertThatThrownBy(() -> reviewService.patchReview(nonExistingId, patchDto))
+                    .isInstanceOf(ReviewNotFoundException.class)
+                    .hasMessageContaining(String.valueOf(nonExistingId));
         }
     }
 

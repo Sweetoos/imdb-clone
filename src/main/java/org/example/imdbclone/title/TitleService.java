@@ -7,6 +7,7 @@ import org.example.imdbclone.title.dto.TitleCreateDto;
 import org.example.imdbclone.title.dto.TitlePatchDto;
 import org.example.imdbclone.title.dto.TitleResponseDto;
 import org.example.imdbclone.title.dto.TitleUpdateDto;
+import org.example.imdbclone.title.exception.TitleAlreadyExistsException;
 import org.example.imdbclone.title.exception.TitleNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,15 @@ public class TitleService {
     public TitleResponseDto createTitle(TitleCreateDto dto) {
         boolean exists = titleRepository.existsByTitleNameAndStartYear(dto.titleName(), dto.startYear());
         if (exists) {
-            throw new RuntimeException("Title already exists");
+            throw new TitleAlreadyExistsException("Title already exists with name: '" + dto.titleName() + "' and year: " + dto.startYear());
         }
 
-        if (dto.startYear() > Year.now().getValue() + 10) {
-            throw new RuntimeException("Title can't be created in the future");
+        if (dto.startYear() != null && dto.startYear() > Year.now().getValue() + 10) {
+            throw new IllegalArgumentException("Title cannot be created more than 10 years in the future");
+        }
+
+        if (dto.startYear() != null && dto.endYear() != null && dto.endYear() < dto.startYear()) {
+            throw new IllegalArgumentException("End year cannot be before start year");
         }
 
         Title titleToSave = Title.builder()

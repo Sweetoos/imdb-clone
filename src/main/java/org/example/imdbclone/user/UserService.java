@@ -3,6 +3,7 @@ package org.example.imdbclone.user;
 import lombok.RequiredArgsConstructor;
 import org.example.imdbclone.user.domain.User;
 import org.example.imdbclone.user.dto.UserCreateDto;
+import org.example.imdbclone.user.dto.UserPatchDto;
 import org.example.imdbclone.user.dto.UserResponseDto;
 import org.example.imdbclone.user.dto.UserUpdateDto;
 import org.example.imdbclone.user.exception.UserAlreadyExistsException;
@@ -72,6 +73,28 @@ public class UserService {
         }
         user.setUsername(dto.username());
         user.setEmail(dto.email());
+        return mapToResponseDto(user);
+    }
+
+    @Transactional
+    public UserResponseDto patchUser(Long id, UserPatchDto dto){
+        User user=userRepository.findById(id).
+                orElseThrow(()->new UserNotFoundException(id));
+
+        if (dto.username() != null && !dto.username().equals(user.getUsername())) {
+            if (userRepository.existsByUsername(dto.username())) {
+                throw new UserAlreadyExistsException("Username '" + dto.username() + "' is already taken");
+            }
+            user.setUsername(dto.username());
+        }
+
+        if (dto.email() != null && !dto.email().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(dto.email())) {
+                throw new UserAlreadyExistsException("Email '" + dto.email() + "' is already registered");
+            }
+            user.setEmail(dto.email());
+        }
+
         return mapToResponseDto(user);
     }
 

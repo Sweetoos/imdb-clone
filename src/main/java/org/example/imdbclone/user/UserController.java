@@ -3,6 +3,7 @@ package org.example.imdbclone.user;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.imdbclone.user.dto.UserCreateDto;
+import org.example.imdbclone.user.dto.UserPatchDto;
 import org.example.imdbclone.user.dto.UserResponseDto;
 import org.example.imdbclone.user.dto.UserUpdateDto;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,11 @@ public class UserController {
     @PutMapping("/{id}")
     public UserResponseDto updateUser(@PathVariable Long id, @RequestBody @Valid UserUpdateDto dto) {
         return userService.updateUser(id, dto);
+    }
+
+    @PatchMapping("/{id}")
+    public UserResponseDto patchUser(@PathVariable Long id, @RequestBody @Valid UserPatchDto dto){
+        return userService.patchUser(id, dto);
     }
 
     @DeleteMapping("/{id}")

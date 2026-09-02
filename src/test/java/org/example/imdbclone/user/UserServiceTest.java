@@ -2,6 +2,7 @@ package org.example.imdbclone.user;
 
 import org.example.imdbclone.user.domain.User;
 import org.example.imdbclone.user.dto.UserCreateDto;
+import org.example.imdbclone.user.dto.UserPatchDto;
 import org.example.imdbclone.user.dto.UserResponseDto;
 import org.example.imdbclone.user.dto.UserUpdateDto;
 import org.example.imdbclone.user.exception.UserAlreadyExistsException;
@@ -211,6 +212,70 @@ public class UserServiceTest {
             assertThatThrownBy(() -> userService.updateUser(existingId, updateDto))
                     .isInstanceOf(UserAlreadyExistsException.class)
                     .hasMessageContaining("Username 'taken_user' is already taken");
+        }
+    }
+
+    @Nested
+    @DisplayName("[USER] SERVICE: PATCH")
+    class PatchUserTests{
+        @Test
+        @DisplayName("Should patch only username when email is null")
+        void shouldPatchOnlyUsername(){
+            Long existingId = 99999999L;
+            UserPatchDto patchDto = new UserPatchDto("new_username", null);
+
+            when(userRepository.findById(existingId)).thenReturn(Optional.of(sampleUser));
+            when(userRepository.existsByUsername("new_username")).thenReturn(false);
+
+            UserResponseDto result = userService.patchUser(existingId, patchDto);
+
+            assertThat(result).isNotNull();
+            assertThat(result.username()).isEqualTo("new_username");
+            assertThat(result.email()).isEqualTo("janedoe@kds.pl");
+            verify(userRepository, never()).existsByEmail(any());
+        }
+        @Test
+        @DisplayName("Should patch only email when username is null")
+        void shouldPatchOnlyEmail() {
+            Long existingId = 99999999L;
+            UserPatchDto patchDto = new UserPatchDto(null, "new_email@kds.pl");
+
+            when(userRepository.findById(existingId)).thenReturn(Optional.of(sampleUser));
+            when(userRepository.existsByEmail("new_email@kds.pl")).thenReturn(false);
+
+            UserResponseDto result = userService.patchUser(existingId, patchDto);
+
+            assertThat(result).isNotNull();
+            assertThat(result.username()).isEqualTo("jane_doe"); // Stary username pozostał bez zmian!
+            assertThat(result.email()).isEqualTo("new_email@kds.pl");
+            verify(userRepository, never()).existsByUsername(any());
+        }
+
+        @Test
+        @DisplayName("Should throw UserAlreadyExistsException when patched username is already taken")
+        void shouldThrowExceptionWhenPatchedUsernameIsTaken() {
+            Long existingId = 99999999L;
+            UserPatchDto patchDto = new UserPatchDto("taken_username", null);
+
+            when(userRepository.findById(existingId)).thenReturn(Optional.of(sampleUser));
+            when(userRepository.existsByUsername("taken_username")).thenReturn(true);
+
+            assertThatThrownBy(() -> userService.patchUser(existingId, patchDto))
+                    .isInstanceOf(UserAlreadyExistsException.class)
+                    .hasMessageContaining("Username 'taken_username' is already taken");
+        }
+
+        @Test
+        @DisplayName("Should throw UserNotFoundException when patching non-existing user")
+        void shouldThrowExceptionWhenPatchingNonExistingUser() {
+            Long nonExistingId = 11111111L;
+            UserPatchDto patchDto = new UserPatchDto("new_username", null);
+
+            when(userRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+            assertThatThrownBy(() -> userService.patchUser(nonExistingId, patchDto))
+                    .isInstanceOf(UserNotFoundException.class)
+                    .hasMessageContaining(String.valueOf(nonExistingId));
         }
     }
 

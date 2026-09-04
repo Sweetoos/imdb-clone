@@ -1,19 +1,22 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.keyword.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "keyword")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Keyword {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "keyword_id")
     private Long keywordId;
 
-    @Column(name = "name", length = 100, nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true, length = 100)
     private String name;
 }

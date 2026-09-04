@@ -2,8 +2,8 @@ package org.example.imdbclone.title.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.imdbclone.model.Genre;
-import org.example.imdbclone.model.Keyword;
+import org.example.imdbclone.genre.domain.Genre;
+import org.example.imdbclone.keyword.domain.Keyword;
 import org.example.imdbclone.moviecast.domain.MovieCast;
 
 import java.util.ArrayList;

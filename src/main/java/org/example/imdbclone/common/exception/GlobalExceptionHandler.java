@@ -1,6 +1,8 @@
 package org.example.imdbclone.common.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.example.imdbclone.genre.exception.GenreAlreadyExistsException;
+import org.example.imdbclone.genre.exception.GenreNotFoundException;
 import org.example.imdbclone.moviecast.exception.MovieCastAlreadyExistsException;
 import org.example.imdbclone.moviecast.exception.MovieCastNotFoundException;
 import org.example.imdbclone.person.exception.PersonAlreadyExistsException;
@@ -30,7 +32,8 @@ public class GlobalExceptionHandler {
             PersonNotFoundException.class,
             MovieCastNotFoundException.class,
             UserNotFoundException.class,
-            ReviewNotFoundException.class
+            ReviewNotFoundException.class,
+            GenreNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
@@ -48,7 +51,8 @@ public class GlobalExceptionHandler {
             PersonAlreadyExistsException.class,
             MovieCastAlreadyExistsException.class,
             UserAlreadyExistsException.class,
-            DuplicateReviewException.class
+            DuplicateReviewException.class,
+            GenreAlreadyExistsException.class
     })
     public ResponseEntity<ErrorResponse> handleConflictExceptions(RuntimeException ex, HttpServletRequest request){
         ErrorResponse error = new ErrorResponse(

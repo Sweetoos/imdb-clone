@@ -1,16 +1,15 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.genre.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-
-@Setter
 @Entity
-@Getter
-@ToString
-@NoArgsConstructor
-@EqualsAndHashCode
 @Table(name = "genre")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Genre {
 
     @Id
@@ -18,7 +17,6 @@ public class Genre {
     @Column(name = "genre_id")
     private Long genreId;
 
-    @Column(name = "genre_name")
+    @Column(name = "genre_name", nullable = false, unique = true, length = 100)
     private String genreName;
-
 }

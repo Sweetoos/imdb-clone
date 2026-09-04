@@ -83,6 +83,10 @@ public class PersonServiceTest {
             when(personRepository.findById(id)).thenReturn(Optional.of(personMockFromDb));
 
             PersonResponseDto result = personService.getPersonById(id);
+
+            assertThat(result).isNotNull();
+            assertThat(result.personId()).isEqualTo(id);
+            assertThat(result.firstName()).isEqualTo("Mitch");
         }
 
         @Test
@@ -152,7 +156,6 @@ public class PersonServiceTest {
                     Role.DIRECTOR);
 
             when(personRepository.findById(id)).thenReturn(Optional.of(personMockFromDb));
-            when(personRepository.save(any(Person.class))).thenReturn(personMockFromDb);
             PersonResponseDto result = personService.updatePerson(id, updateDto);
 
             assertThat(result).isNotNull();
@@ -168,11 +171,11 @@ public class PersonServiceTest {
         @DisplayName("Should throw PersonNotFoundException when updating non-existing person")
         void shouldThrowPersonNotFoundExceptionWhenUpdatingNonExistingPerson() {
             Long nonExistingId = 99999999L;
-            PersonUpdateDto updateDto=new PersonUpdateDto(
+            PersonUpdateDto updateDto = new PersonUpdateDto(
                     "Ozzy",
                     "Osbourne",
-                    LocalDate.of(1948,11,3),
-                    LocalDate.of(2025,6,22),
+                    LocalDate.of(1948, 11, 3),
+                    LocalDate.of(2025, 6, 22),
                     Role.WRITER
             );
 
@@ -188,7 +191,7 @@ public class PersonServiceTest {
     class PatchPersonTests {
         @Test
         @DisplayName("Should patch only provided fields and ignore others")
-        void shouldPatchTitleSuccessfully(){
+        void shouldPatchTitleSuccessfully() {
             Long existingId = 99999999L;
             PersonPatchDto updateDto = new PersonPatchDto(
                     "Max",
@@ -198,7 +201,6 @@ public class PersonServiceTest {
                     Role.WRITER
             );
             when(personRepository.findById(existingId)).thenReturn(Optional.of(personMockFromDb));
-            when(personRepository.save(any(Person.class))).thenReturn(personMockFromDb);
             PersonResponseDto result = personService.patchPerson(existingId, updateDto);
 
             assertThat(result).isNotNull();
@@ -219,6 +221,7 @@ public class PersonServiceTest {
             personService.deletePerson(existingId);
             verify(personRepository, times(1)).deleteById(existingId);
         }
+
         @Test
         @DisplayName("Should throw PersonNotFoundException when person doesn't exist")
         void shouldThrowPersonNotFoundExceptionWhenPersonDoesntExist() {
@@ -230,5 +233,4 @@ public class PersonServiceTest {
             verify(personRepository, never()).deleteById(any());
         }
     }
-
 }

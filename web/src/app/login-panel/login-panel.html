@@ -1,0 +1,27 @@
+<div style="text-align: center; margin-top: 50px;">
+    <h1>Logging for system</h1>
+
+    @if (!token) {
+    <div style="display: inline-block; text-align: left; background: #eee; padding: 20px; border-radius: 8px;">
+        <label>Login:</label><br />
+        <input [(ngModel)]="credentials.username" style="background: #ddd" type="text" /><br /><br />
+
+        <label>Password:</label><br />
+        <input [(ngModel)]="credentials.password" style="background: #ddd" type="password" /><br /><br />
+
+        <button (click)="login()" style="padding: 10px 20px; cursor: pointer;">Login</button>
+    </div>
+    } @else {
+    <div style="background: #eef; padding: 20px; display: inline-block; border-radius: 8px;">
+        <h2 style="color: green;">You're logged in!</h2>
+        <p>Your JWT is:</p>
+        <textarea rows="6" cols="60" disabled>{{ token }}</textarea>
+        <br /><br />
+        <button (click)="logout()" style="padding: 10px 20px; cursor: pointer;">Log out</button>
+    </div>
+    }
+
+    @if (errorMessage) {
+    <p style="color: red; font-weight: bold;">{{ errorMessage }}</p>
+    }
+</div>

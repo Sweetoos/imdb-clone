@@ -1,0 +1,15 @@
+package org.example.imdbclone.person.dto;
+
+import org.example.imdbclone.person.domain.Role;
+
+import java.time.LocalDate;
+
+public record PersonResponseDto(
+        Long personId,
+        String firstName,
+        String lastName,
+        LocalDate birthDate,
+        LocalDate deathDate,
+        Role role
+) {
+}

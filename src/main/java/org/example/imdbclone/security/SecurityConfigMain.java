@@ -1,3 +1,4 @@
+/*
 package org.example.imdbclone.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,3 +77,4 @@ public class SecurityConfigMain {
 //        return config.getAuthenticationManager();
 //    }
 }
+*/

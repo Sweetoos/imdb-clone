@@ -3,6 +3,8 @@ package org.example.imdbclone.common.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.imdbclone.genre.exception.GenreAlreadyExistsException;
 import org.example.imdbclone.genre.exception.GenreNotFoundException;
+import org.example.imdbclone.keyword.exception.KeywordAlreadyExistsException;
+import org.example.imdbclone.keyword.exception.KeywordNotFoundException;
 import org.example.imdbclone.moviecast.exception.MovieCastAlreadyExistsException;
 import org.example.imdbclone.moviecast.exception.MovieCastNotFoundException;
 import org.example.imdbclone.person.exception.PersonAlreadyExistsException;
@@ -13,6 +15,8 @@ import org.example.imdbclone.title.exception.TitleAlreadyExistsException;
 import org.example.imdbclone.title.exception.TitleNotFoundException;
 import org.example.imdbclone.user.exception.UserAlreadyExistsException;
 import org.example.imdbclone.user.exception.UserNotFoundException;
+import org.example.imdbclone.watchlist.exception.WatchlistAlreadyExistsException;
+import org.example.imdbclone.watchlist.exception.WatchlistNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -33,7 +37,9 @@ public class GlobalExceptionHandler {
             MovieCastNotFoundException.class,
             UserNotFoundException.class,
             ReviewNotFoundException.class,
-            GenreNotFoundException.class
+            GenreNotFoundException.class,
+            KeywordNotFoundException.class,
+            WatchlistNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
@@ -52,7 +58,9 @@ public class GlobalExceptionHandler {
             MovieCastAlreadyExistsException.class,
             UserAlreadyExistsException.class,
             DuplicateReviewException.class,
-            GenreAlreadyExistsException.class
+            GenreAlreadyExistsException.class,
+            KeywordAlreadyExistsException.class,
+            WatchlistAlreadyExistsException.class
     })
     public ResponseEntity<ErrorResponse> handleConflictExceptions(RuntimeException ex, HttpServletRequest request){
         ErrorResponse error = new ErrorResponse(

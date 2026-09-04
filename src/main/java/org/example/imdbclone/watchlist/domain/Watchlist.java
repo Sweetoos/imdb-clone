@@ -1,9 +1,7 @@
-package org.example.imdbclone.model;
+package org.example.imdbclone.watchlist.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.imdbclone.title.domain.Title;
 import org.example.imdbclone.user.domain.User;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,22 +15,26 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Watchlist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    @EmbeddedId
+    private WatchlistId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @MapsId("userId")
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "title_id")
+    @MapsId("titleId")
+    @JoinColumn(name = "title_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Title title;
 
     @CreationTimestamp
-    @Column(name = "added_at", updatable = false)
+    @Column(name = "added_at", nullable = false, updatable = false)
     private LocalDateTime addedAt;
 }

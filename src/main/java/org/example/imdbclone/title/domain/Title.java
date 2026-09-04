@@ -5,6 +5,7 @@ import lombok.*;
 import org.example.imdbclone.genre.domain.Genre;
 import org.example.imdbclone.keyword.domain.Keyword;
 import org.example.imdbclone.moviecast.domain.MovieCast;
+import org.example.imdbclone.rating.domain.TitleRating;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Title {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "title_id")
@@ -49,7 +51,8 @@ public class Title {
             inverseJoinColumns = @JoinColumn(name = "genre_id", foreignKey = @ForeignKey(name = "fk_genre"))
     )
     @Builder.Default
-    private List<Genre> genres=new ArrayList<>();
+    @ToString.Exclude
+    private List<Genre> genres = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -58,8 +61,14 @@ public class Title {
             inverseJoinColumns = @JoinColumn(name = "keyword_id", foreignKey = @ForeignKey(name = "fk_keyword_kw"))
     )
     @Builder.Default
-    private List<Keyword> keywords=new ArrayList<>();
+    @ToString.Exclude
+    private List<Keyword> keywords = new ArrayList<>();
 
     @OneToMany(mappedBy = "title")
+    @ToString.Exclude
     private List<MovieCast> cast;
+
+    @OneToOne(mappedBy = "title", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private TitleRating titleRating;
 }

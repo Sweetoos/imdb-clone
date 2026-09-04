@@ -62,6 +62,7 @@ public class TitleServiceTest {
                     TitleType.TVSERIES
             );
 
+            when(titleRepository.existsByTitleNameAndStartYear("50 pozycji Lococka", 2026)).thenReturn(false);
             when(titleRepository.save(any(Title.class))).thenReturn(titleMockFromDb);
 
             TitleResponseDto result = titleService.createTitle(createDto);
@@ -95,15 +96,16 @@ public class TitleServiceTest {
         @DisplayName("Should return list of all titles")
         void shouldReturnAllTitles() {
             Title movie = new Title();
-            movie.setTitleId(88888888888L);
+            movie.setTitleId(88888888L);
             movie.setTitleName("Interstellar");
             movie.setExplicitContent(false);
             movie.setRuntimeMinutes(169);
             movie.setStartYear(2014);
             movie.setEndYear(2014);
             movie.setTitleType(TitleType.MOVIE);
+
             Title series = new Title();
-            series.setTitleId(99999999999L);
+            series.setTitleId(99999999L);
             series.setTitleName("Game of Thrones");
             series.setExplicitContent(true);
             series.setStartYear(2011);
@@ -119,8 +121,8 @@ public class TitleServiceTest {
             List<TitleResponseDto> result = titleService.getAllTitles();
 
             assertThat(result).isNotNull().hasSize(2);
-            assertThat(result.get(0).titleId()).isEqualTo(88888888888L);
-            assertThat(result.get(1).titleId()).isEqualTo(99999999999L);
+            assertThat(result.get(0).titleId()).isEqualTo(88888888L);
+            assertThat(result.get(1).titleId()).isEqualTo(99999999L);
             assertThat(result.get(0).titleName()).isEqualTo("Interstellar");
             assertThat(result.get(1).titleName()).isEqualTo("Game of Thrones");
             verify(titleRepository, times(1)).findAll();

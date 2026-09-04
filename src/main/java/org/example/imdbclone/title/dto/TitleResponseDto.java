@@ -1,7 +1,9 @@
 package org.example.imdbclone.title.dto;
 
-import org.example.imdbclone.title.domain.Title;
+import org.example.imdbclone.moviecast.domain.JobRole;
 import org.example.imdbclone.title.domain.TitleType;
+
+import java.util.List;
 
 public record TitleResponseDto(
         Long titleId,
@@ -11,8 +13,16 @@ public record TitleResponseDto(
         Integer startYear,
         Integer endYear,
         TitleType titleType,
-        Double averageRating
-        //TODO: add actors
+        Double averageRating,
+        Integer numVotes,
+        List<String> genres,
+        List<String> keywords,
+        List<CastMemberDto> cast
 ) {
-
+    public record CastMemberDto(
+            Long personId,
+            String personName,
+            String characterName,
+            JobRole jobRole
+    ) {}
 }

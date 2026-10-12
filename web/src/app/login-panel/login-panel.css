@@ -1,0 +1,6 @@
+.auth-panel { max-width: 380px; margin: 3rem auto; padding: 1.5rem; border: 1px solid #666; border-radius: 8px; }
+form { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1rem; }
+input { padding: .6rem; border: 1px solid #888; border-radius: 4px; }
+button { padding: .6rem 1rem; cursor: pointer; border: 1px solid #888; border-radius: 4px; }
+button:disabled { opacity: .5; cursor: wait; }
+[role=alert] { color: #dc2626; margin-top: 1rem; }

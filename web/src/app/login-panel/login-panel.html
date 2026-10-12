@@ -1,0 +1,30 @@
+<section class="auth-panel">
+  @if (auth.user(); as user) {
+    <h1>Witaj, {{ user.username }}!</h1>
+    <p>{{ user.email }}</p>
+    <button type="button" (click)="auth.logout()">Wyloguj się</button>
+  } @else {
+    <h1>{{ registering ? 'Załóż konto' : 'Zaloguj się' }}</h1>
+    <form #form="ngForm" (ngSubmit)="submit()">
+      <label for="username">Login</label>
+      <input id="username" name="username" [(ngModel)]="credentials.username"
+             required [minlength]="registering ? 3 : 1" maxlength="50" autocomplete="username" />
+      @if (registering) {
+        <label for="email">E-mail</label>
+        <input id="email" name="email" [(ngModel)]="credentials.email" type="email"
+               required email maxlength="255" autocomplete="email" />
+      }
+      <label for="password">Hasło</label>
+      <input id="password" name="password" [(ngModel)]="credentials.password" type="password"
+             required [minlength]="registering ? 8 : 1" maxlength="72"
+             [autocomplete]="registering ? 'new-password' : 'current-password'" />
+      <button type="submit" [disabled]="form.invalid || submitting">
+        {{ submitting ? 'Proszę czekać…' : registering ? 'Zarejestruj się' : 'Zaloguj się' }}
+      </button>
+    </form>
+    <button type="button" (click)="switchMode()" [disabled]="submitting">
+      {{ registering ? 'Mam już konto' : 'Nie mam konta — rejestracja' }}
+    </button>
+  }
+  @if (errorMessage) { <p role="alert">{{ errorMessage }}</p> }
+</section>

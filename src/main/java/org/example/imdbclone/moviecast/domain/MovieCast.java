@@ -14,7 +14,7 @@ import org.example.imdbclone.title.domain.Title;
 @Entity
 public class MovieCast {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

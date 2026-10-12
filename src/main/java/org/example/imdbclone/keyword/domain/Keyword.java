@@ -13,7 +13,7 @@ import lombok.*;
 public class Keyword {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "keyword_id")
     private Long keywordId;
 

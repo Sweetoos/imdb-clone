@@ -21,7 +21,7 @@ import java.util.List;
 public class Title {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "title_id")
     private Long titleId;
 

@@ -1,0 +1,2 @@
+- sequence strategy instead of identity (because its postgres)
+- sql init file in resources

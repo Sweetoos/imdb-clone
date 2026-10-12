@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-login-panel',
@@ -8,29 +10,38 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './login-panel.html',
   styleUrl: './login-panel.css',
 })
-export class LoginPanel {
-  private http = inject(HttpClient);
-  credentials = { username: '', password: '' };
-  token: string | null = null;
+export class LoginPanel implements OnInit {
+  readonly auth = inject(AuthService);
+  credentials = { username: '', email: '', password: '' };
+  registering = false;
+  submitting = false;
   errorMessage = '';
 
-  login() {
-    this.http.post<any>('http://localhost:8080/auth/login', this.credentials).subscribe({
-      next: (response) => {
-        this.token = response.token;
-        localStorage.setItem('jwt_token', response.token);
-        this.errorMessage = '';
-        console.log('Login success', response);
-      },
-      error: (err) => {
-        this.token = null;
-        this.errorMessage = 'Login error';
-        console.error('connection fail with backend', err);
+  ngOnInit() { this.auth.restore(); }
+
+  submit() {
+    if (this.submitting) return;
+    this.submitting = true;
+    this.errorMessage = '';
+    const request = this.registering
+      ? this.auth.register(this.credentials)
+      : this.auth.login({ username: this.credentials.username, password: this.credentials.password });
+    request.pipe(finalize(() => this.submitting = false)).subscribe({
+      next: () => this.credentials.password = '',
+      error: (error: HttpErrorResponse) => {
+        const validation = error.error?.validationErrors;
+        this.errorMessage = validation ? Object.values(validation).join(' ') :
+          error.status === 401 ? 'Nieprawidłowy login lub hasło.' :
+          error.status === 409 ? 'Login lub adres e-mail jest już zajęty.' :
+          error.status === 0 ? 'Nie można połączyć się z serwerem.' :
+          'Nie udało się wykonać operacji. Sprawdź dane i spróbuj ponownie.';
       },
     });
   }
-  logout() {
-    this.token = null;
-    localStorage.removeItem('jwt_token');
+
+  switchMode() {
+    this.registering = !this.registering;
+    this.errorMessage = '';
+    this.credentials.password = '';
   }
 }

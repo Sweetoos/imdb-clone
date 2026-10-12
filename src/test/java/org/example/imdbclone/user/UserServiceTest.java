@@ -31,6 +31,9 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UserService userService;
 
@@ -58,7 +61,9 @@ public class UserServiceTest {
 
             when(userRepository.existsByUsername("jane_doe")).thenReturn(false);
             when(userRepository.existsByEmail("janedoe@kds.pl")).thenReturn(false);
+            when(passwordEncoder.encode("password")).thenReturn("encoded-password");
             when(userRepository.save(any(User.class))).thenReturn(sampleUser);
+
 
             UserResponseDto response = userService.createUser(createDto);
 
@@ -67,7 +72,7 @@ public class UserServiceTest {
             assertThat(response.username()).isEqualTo("jane_doe");
             assertThat(response.email()).isEqualTo("janedoe@kds.pl");
 
-            verify(userRepository, times(1)).save(any(User.class));
+            verify(userRepository).save(argThat(u -> "encoded-password".equals(u.getPasswordHash())));
         }
 
         @Test

@@ -9,6 +9,7 @@ import org.example.imdbclone.user.dto.UserUpdateDto;
 import org.example.imdbclone.user.exception.UserAlreadyExistsException;
 import org.example.imdbclone.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponseDto createUser(UserCreateDto dto) {
@@ -28,11 +30,10 @@ public class UserService {
             throw new UserAlreadyExistsException("Email '" + dto.email() + "' is already registered");
         }
 
-        //TODO: passwordEncoder.encode(dto.password())
         User user = User.builder()
                         .username(dto.username())
                         .email(dto.email())
-                        .passwordHash(dto.password()) // placeholder
+                        .passwordHash(passwordEncoder.encode(dto.password()))
                         .build();
 
         User savedUser = userRepository.save(user);

@@ -102,6 +102,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthentication(RuntimeException ex, HttpServletRequest request) {
+        return ResponseEntity.status(401).body(new ErrorResponse(401, "Unauthorized", "Invalid username or password", request.getRequestURI()));
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(RuntimeException ex, HttpServletRequest request) {
+        return ResponseEntity.status(403).body(new ErrorResponse(403, "Forbidden", "Access denied", request.getRequestURI()));
+    }
+
     // 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {

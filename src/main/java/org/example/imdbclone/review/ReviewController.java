@@ -1,6 +1,7 @@
 package org.example.imdbclone.review;
 
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.RequiredArgsConstructor;
 import org.example.imdbclone.review.dto.ReviewCreateDto;
 import org.example.imdbclone.review.dto.ReviewPatchDto;
@@ -19,6 +20,7 @@ public class ReviewController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("@ownership.user(authentication, #p0.userId())")
     public ReviewResponseDto createReview(@RequestBody @Valid ReviewCreateDto dto) {
         return reviewService.createReview(dto);
     }
@@ -34,17 +36,20 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@ownership.review(authentication, #p0)")
     public ReviewResponseDto updateReview(@PathVariable Long id, @RequestBody @Valid ReviewUpdateDto dto) {
         return reviewService.updateReview(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("@ownership.review(authentication, #p0)")
     public ReviewResponseDto patchReview(@PathVariable Long id, @RequestBody @Valid ReviewPatchDto dto) {
         return reviewService.patchReview(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("@ownership.review(authentication, #p0)")
     public void deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
     }

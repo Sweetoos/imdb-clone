@@ -1,26 +1,46 @@
 package org.example.imdbclone.security;
 
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.example.imdbclone.user.UserRepository;
+import org.example.imdbclone.user.UserService;
+import org.example.imdbclone.user.dto.UserCreateDto;
+import org.example.imdbclone.user.dto.UserResponseDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthController {
-//    private final JwtService jwtService;
-//
-//    @PostMapping("/login")
-//    public Map<String,String> login(@RequestBody LoginRequest loginRequest){
-//        if("user".equals(loginRequest.username())&&"admin".equals(loginRequest.password())){
-//            String token= jwtService.generateToken(loginRequest.username());
-//            return Map.of("token", token);
-//        } else{
-//            throw new RuntimeException("Wrong login or password");
-//        }
-//    }
+    private final UserRepository users;
+    private final UserService userService;
+    private final PasswordEncoder passwords;
+    private final JwtService jwt;
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthResponse register(@Valid @RequestBody UserCreateDto dto) {
+        UserResponseDto user = userService.createUser(dto);
+        return new AuthResponse(jwt.generateToken(user.userId()), user);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
+        var user = users.findByUsername(request.username())
+                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+        if (!passwords.matches(request.password(), user.getPasswordHash())) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+        return new AuthResponse(jwt.generateToken(user.getUserId()),
+                userService.getUserById(user.getUserId()));
+    }
+
+    @GetMapping("/me")
+    public UserResponseDto me(Authentication authentication) {
+        return userService.getUserById(Long.valueOf(authentication.getName()));
+    }
 }

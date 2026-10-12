@@ -1,6 +1,7 @@
 package org.example.imdbclone.user;
 
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.RequiredArgsConstructor;
 import org.example.imdbclone.user.dto.UserCreateDto;
 import org.example.imdbclone.user.dto.UserPatchDto;
@@ -19,37 +20,44 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("denyAll()")
     public UserResponseDto createUser(@RequestBody @Valid UserCreateDto dto){
         return userService.createUser(dto);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@ownership.user(authentication, #p0)")
     public UserResponseDto getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @GetMapping("/username/{username}")
+    @PreAuthorize("@ownership.username(authentication, #p0)")
     public UserResponseDto getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
 
     @GetMapping
+    @PreAuthorize("denyAll()")
     public List<UserResponseDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@ownership.user(authentication, #p0)")
     public UserResponseDto updateUser(@PathVariable Long id, @RequestBody @Valid UserUpdateDto dto) {
         return userService.updateUser(id, dto);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("@ownership.user(authentication, #p0)")
     public UserResponseDto patchUser(@PathVariable Long id, @RequestBody @Valid UserPatchDto dto){
         return userService.patchUser(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("@ownership.user(authentication, #p0)")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }

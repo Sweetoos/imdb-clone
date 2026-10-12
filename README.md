@@ -1,12 +1,12 @@
 # 🎬 IMDb Clone — Movie & TV Series Platform
 
-![Java](https://img.shields.io/badge/Java-21%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Java](https://img.shields.io/badge/Java-25-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.5-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-21-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 
-A modern, robust, and scalable full-stack clone of IMDb (Internet Movie Database). Built with clean architecture principles, featuring a rich domain model modeled after real-world IMDb datasets, strict DTO layering, strong type safety, and RESTful APIs.
+An in-progress clone of IMDb (Internet Movie Database), with a Java/Spring Boot REST API and an Angular frontend. The backend is organized into domain modules with controllers, services, repositories, and DTOs.
 
 ---
 
@@ -16,24 +16,54 @@ A modern, robust, and scalable full-stack clone of IMDb (Internet Movie Database
 * **🎭 Cast & Crew Filmography:** Many-to-many relationship linking actors, directors, writers, and producers with specific character roles.
 * **🏷️ Rich Metadata:** Tagging and categorization through dynamic **Genres**, **Keywords**, and **Localized Titles (AKAs)**.
 * **⭐ User Reviews & Ratings:** Unique rating submissions per user, automated average rating computation, and user watchlists.
-* **🛡️ Production-Ready Backend:** Strict DTO layering, custom business exceptions, Spring Data JPA dirty checking, and Swagger/OpenAPI documentation.
+* **🛠️ Backend Structure:** DTOs, custom business exceptions, Spring Data JPA, and Swagger/OpenAPI documentation.
+
+---
+
+## 📚 Tutorial
+
+For a beginner-friendly explanation in Polish of the implemented authentication and Angular flow, see [Security i Angular — tutorial](docs/SECURITY_I_ANGULAR_TUTORIAL.md).
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Backend
-* **Language:** Java 21+
-* **Framework:** Spring Boot 4.x (Spring Web, Spring Data JPA, Spring Validation)
+* **Language:** Java 25
+* **Framework:** Spring Boot 4.0.5 (Spring Web MVC, Spring Data JPA)
 * **Database:** PostgreSQL 15 (Docker containerized)
-* **Security & Auth:** Spring Security, JJWT (Stateless JWT Authentication)
+* **Security & Auth:** Spring Security, BCrypt password hashing, and stateless JWT authentication with JJWT 0.13.0.
 * **Utilities:** Project Lombok (Builder pattern, immutability)
 * **API Documentation:** SpringDoc OpenAPI / Swagger UI
 * **Testing:** JUnit 5, Mockito, AssertJ
 
 ### Frontend (In Progress)
-* **Framework:** Angular 17+ (Standalone Components, Signals, RxJS)
-* **Styling:** Modern Responsive UI / Tailwind CSS
+* **Framework:** Angular 21.2 (Standalone Components, Signals, RxJS)
+* **Styling:** Tailwind CSS 4 and component CSS
+
+### Current Frontend & Security Status
+
+* The frontend lives in `web/` and includes a header, home page, title card, and login panel.
+* The home page currently uses a hardcoded sample title; catalog integration is in progress.
+* The login panel supports registration, login, logout, and session restoration through `/auth/me`.
+* The Angular interceptor adds Bearer tokens only to this backend's requests, excludes login/register requests, and clears the session on a 401 response.
+* Tokens are stored in browser local storage. Logout removes the local token; issued tokens remain valid until expiration (one hour by default).
+
+### Authentication API & Access Rules
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/auth/register` | Register with `username`, `email`, and `password`; returns `201` with `{token, user}` |
+| `POST` | `/auth/login` | Authenticate with `username` and `password`; returns `{token, user}` |
+| `GET` | `/auth/me` | Return the current user; requires `Authorization: Bearer <token>` |
+
+* Registration requires a 3–50 character username, valid email, and an 8–72 character password. BCrypt additionally limits passwords to 72 UTF-8 bytes.
+* Catalog and review GET endpoints and Swagger documentation are public. Catalog changes require authentication; the current model has no admin role, so every authenticated user can modify catalog data.
+* Users can read, update, and delete only their own account. Listing all users and the old `POST /api/users` route are denied; registration uses `/auth/register`.
+* Review creation requires the authenticated user's ID. Review edits/deletion require ownership. Watchlists can be read or changed only by their owner.
+* Missing, invalid, expired, or deleted-user tokens return `401`; denied access returns `403`.
+* Passwords are stored as BCrypt hashes. Existing plaintext or invalid placeholder hashes cannot be used for login; register a new account for testing.
+* For local development, an empty `JWT_SECRET` generates an ephemeral signing key at startup, invalidating previous tokens after restart. For a persistent deployment, set `JWT_SECRET` to a Base64-encoded random key of at least 32 bytes. `JWT_EXPIRATION` is in milliseconds and defaults to `3600000`.
 
 ---
 
@@ -118,15 +148,13 @@ Test coverage focuses on:
 ## ⚙️ Getting Started
 
 ### Prerequisites
-* **JDK 21** or higher
+* **JDK 25**
 * **Docker & Docker Compose**
-* **Maven 3.8+** (or use the included `./mvnw` wrapper)
+* **Maven** (or use the included `./mvnw` wrapper)
+* **Node.js and npm** for the Angular frontend (the frontend declares npm 11.12.1)
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/your-username/imdb-clone.git
-cd imdb-clone
-```
+### 1. Open the repository
+Use a local checkout of this repository and open a terminal in its root directory.
 
 ### 2. Start PostgreSQL via Docker Compose
 Run the containerized PostgreSQL 15 instance:
@@ -144,14 +172,31 @@ The application will start on `http://localhost:8080`.
 Interactive Swagger API docs will be available at:
 👉 `http://localhost:8080/swagger-ui.html`
 
+### 4. Run the Frontend
+
+In a separate terminal:
+```bash
+cd web
+npm install
+npm start
+```
+The Angular development server is available at `http://localhost:4200`.
+
+To build the frontend:
+```bash
+npm run build
+```
+
+Open `/login-panel` to register or log in. The backend must be running at `http://localhost:8080`.
+
 ---
 
 ## 🗺️ Architectural Roadmap
 
 - [x] **Phase 1: Core Domain, Services & REST API (Spring Boot + Postgres)**
-- [x] **Phase 2: Comprehensive Unit Tests & Global Exception Handling (`@ControllerAdvice`)**
-- [ ] **Phase 3: SPA Client (Angular 17+ with Signals, Tailwind CSS & Standalone Components)**
-- [ ] **Phase 4: Security Layer (Spring Security + JWT Authentication)**
+- [x] **Phase 2: Service Unit Tests & Global Exception Handling (`@ControllerAdvice`)**
+- [ ] **Phase 3 (in progress): SPA Client (Angular 21 with Signals, Tailwind CSS & Standalone Components)**
+- [x] **Phase 4: Security Layer (Spring Security + JWT Authentication)**
 - [ ] **Phase 5: Polyglot Microservices Architecture**:
   - 🍃 **Java/Spring Cloud**: API Gateway & Core Catalog Services.
   - 🐍 **Python (FastAPI + Scikit-Learn)**: Recommendation Engine based on user watchlists & review sentiment analysis.
